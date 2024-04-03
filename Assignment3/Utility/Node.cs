@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Assignment3.Utility;
+using Assignment3.ProblemDomain;
+using Assignment3;
 namespace Assignment3.Utility
 {
     public class Node
     {
-        //can be primitive or object
-        public User value;
+        public User Value { get; set; }
 
-        //pointer to my next node
-        public Node next;
+        public Node Next { get; set; }
 
         public Node(User val)
         {
-            value = val;
-            next = null;
+            Value = val;
+            Next = null;
         }
     }
 }

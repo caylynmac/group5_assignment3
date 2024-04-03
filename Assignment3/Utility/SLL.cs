@@ -6,70 +6,40 @@ using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using Assignment3.ProblemDomain;
+using Assignment3;
 
 namespace Assignment3.Utility
 {
     public class SLL : ILinkedListADT
     {
-        public Node head;
-        public SLL() { }    
+        private Node head;
 
         public bool IsEmpty()
         {
-            return false;
+            return head == null;
         }
 
         public void Clear()
         {
-
+            head = null;
         }
 
         public void AddLast(User value)
         {
-            //look for node with null next
-
-            //create new node
             Node newNode = new Node(value);
-            newNode.next = null;
-            //initialize temp 
-            //temp is the node as the list is iterated
-            //use to get/set the next of each node 
-            Node temp = head;
-           
-            
-
-            //need to check if list is empty first, so head can be properly assigned
-            //if it is then use addfirst instead to just reassign head to new node
             if (head == null)
             {
-                AddFirst(value);
-                
+                head = newNode;
             }
-
-            if (head.next==null)
+            else
             {
-                head.next = newNode;
-                return;
-            }
-            
-
-            //iterate through list 
-            while (temp.next != null)
-            {   //move to next node since we now know the previous is not null
-                
-                temp = temp.next;
-
-                //if next is null, then re point to the new node
-                //the next of newnode is null by default
-                if (temp.next == null)
+                Node current = head;
+                while (current.Next != null)
                 {
-                    
-                    //point temp to newnode
-                    temp.next = newNode;
-                    return;
-                    
+                    current = current.Next;
                 }
-                //if not loop will repeat
+                current.Next = newNode;
             }
         }
 
@@ -80,7 +50,7 @@ namespace Assignment3.Utility
 
 
             //point to old head
-            newNode.next = head;
+            newNode.Next = head;
 
             //make head the new node
             head = newNode;
@@ -88,14 +58,46 @@ namespace Assignment3.Utility
 
         public void Add(User value, int index)
         {
-            return;
+            if (index < 0 || index > Count())
+            {
+                throw new IndexOutOfRangeException("Invalid index");
+            }
+
+            if (index == 0)
+            {
+                AddFirst(value);
+            }
+            else if (index == Count())
+            {
+                AddLast(value);
+            }
+            else
+            {
+                Node newNode = new Node(value);
+                Node temp = head;
+                for (int i = 0; i < index - 1; i++)
+                {
+                    temp = temp.Next;
+                }
+                newNode.Next = temp.Next;
+                temp.Next = newNode;
+            }
         }
 
         public void Replace(User value, int index)
         {
-            return;
-        }
+            if (index < 0 || index >= Count())
+            {
+                throw new IndexOutOfRangeException("Invalid index");
+            }
 
+            Node temp = head;
+            for (int i = 0; i < index; i++)
+            {
+                temp = temp.Next;
+            }
+            temp.Value = value;
+        }
 
         public int Count()
         {
@@ -111,127 +113,157 @@ namespace Assignment3.Utility
             int count = 1;
 
             //iterate through list, count nodes
-            while (temp.next != null)
+            while (temp.Next != null)
             {
                 //increment count
                 count++;
-                
-                //move to next node since we now know the previous is not null
-                temp = temp.next;
 
-                if (temp.next == null)
+                //move to next node since we now know the previous is not null
+                temp = temp.Next;
+
+                if (temp.Next == null)
                 {
                     return count;
                 }
-                
+
             }
             return count;
+            //int count = 0;
+            //Node current = head;
+            //while (current != null)
+            //{
+            //    count++;
+            //    current = current.Next;
+            //}
+            //return count;
         }
 
         public void RemoveFirst()
         {
-            //throw exception if list is empty
-            if (head == null)
+            if (head != null)
             {
-                throw new System.ArgumentNullException("The List is empty");
+                head = head.Next;
             }
-
-            //redefine second node (next item) as head
-            //if the head is the only item, then the head will now point to null
-            Node temp = head.next;
-            head = temp;
         }
-
 
         public void RemoveLast()
         {
-            //throw exception if list is empty
             if (head == null)
             {
-                throw new System.ArgumentNullException("The List is empty");
+                return;
             }
-            //initialize temp 
+
+            if (head.Next == null)
+            {
+                head = null;
+                return;
+            }
+
             Node temp = head;
-            Node prev = temp;
-
-            //need to check if list is only one item first, so head can be properly reassigned
-            //if it is then use removeFirst instead to just reassign head to null
-            if (temp.next == null)
+            while (temp.Next.Next != null)
             {
-                RemoveFirst();
+                temp = temp.Next;
             }
-            //iterate through list 
-            while (temp.next != null)
-            {
-                //move prev node
-                prev = temp;
-
-                //move to next node since we now know the previous is not null
-                temp = temp.next;
-
-                //if next is null (last node), then reset the node temp to null
-                if (temp.next == null)
-                {
-                    Console.WriteLine(1);
-                    //point previous node to null
-                    prev.next = null;
-                    return;
-                }
-            }
+            temp.Next = null;
         }
 
         public void Remove(int index)
         {
-            return;
+            if (index < 0 || index >= Count())
+            {
+                throw new IndexOutOfRangeException("Invalid index");
+            }
+
+            if (index == 0)
+            {
+                RemoveFirst();
+            }
+            else if (index == Count() - 1)
+            {
+                RemoveLast();
+            }
+            else
+            {
+                Node temp = head;
+                for (int i = 0; i < index - 1; i++)
+                {
+                    temp = temp.Next;
+                }
+                temp.Next = temp.Next.Next;
+            }
         }
 
         public User GetValue(int index)
         {
-            //throw exception if list is empty (count = 0)
-            if (Count() == 0)
+            if (index < 0 || index >= Count())
             {
-                throw new ArgumentNullException("The list is empty");
-            }
-            //check if index is in range
-            if (index > (Count() - 1) || index < 0)
-            {
-                throw new ArgumentOutOfRangeException("That index is Invalid");
+                throw new IndexOutOfRangeException("Invalid index");
             }
 
-            //start at head
             Node temp = head;
-
-            //empty user object to put match in
-            User user = null;
-
-            //this loop will iterate through numbers until the right index is reached
-            //so that temp will be changed to the next corresponding node with each iteration
-            for (int i = 0; i <= index; i++)
+            for (int i = 0; i < index; i++)
             {
-                if (i == index)
-                {
-                    user = temp.value;
-                }
-                else
-                {
-                    //move to next node
-                    temp = temp.next;
-                }
+                temp = temp.Next;
             }
-            return user;
+            return temp.Value;
         }
-    
 
         public int IndexOf(User value)
         {
-            return 0;
+            Node temp = head;
+            int index = 0;
+            while (temp != null)
+            {
+                if (temp.Value.Equals(value))
+                {
+                    return index;
+                }
+                temp = temp.Next;
+                index++;
+            }
+            return -1;
         }
 
         public bool Contains(User value)
         {
-            return false;
+            return IndexOf(value) != -1;
         }
 
-        //add another method from assignment list here
+        public void Reverse()
+        {
+            Node prev = null;
+            Node current = head;
+            Node next = null;
+            while (current != null)
+            {
+                next = current.Next;
+                current.Next = prev;
+                prev = current;
+                current = next;
+            }
+            head = prev;
+        }
+
+        public void Sort()
+        {
+            // Placeholder for sorting logic
+        }
+
+        public User[] CopyToArray()
+        {
+            // Placeholder for copying logic
+            return null;
+        }
+
+        public void Join(ILinkedListADT otherList)
+        {
+            // Placeholder for joining logic
+        }
+
+        public (ILinkedListADT, ILinkedListADT) Divide(int index)
+        {
+            // Placeholder for division logic
+            return (null, null);
+        }
     }
 }
