@@ -5,6 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using System.Reflection.Metadata;
+using System.Xml.Linq;
+using NUnit.Framework;
+using Assignment3.ProblemDomain;
+using Assignment3.Utility;
+using System.Collections.Generic;
+using System.Collections;
+using System;
 
 namespace Assignment3.Tests
 {
