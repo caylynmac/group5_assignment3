@@ -11,6 +11,7 @@ using Assignment3;
 
 namespace Assignment3.Utility
 {
+    [Serializable]
     public class SLL : ILinkedListADT
     {
         private Node head;

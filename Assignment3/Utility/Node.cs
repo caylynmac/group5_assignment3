@@ -8,6 +8,7 @@ using Assignment3.ProblemDomain;
 using Assignment3;
 namespace Assignment3.Utility
 {
+    [Serializable]
     public class Node
     {
         public User Value { get; set; }

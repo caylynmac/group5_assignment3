@@ -4,6 +4,8 @@ using Assignment3.Utility;
 using Assignment3;
 namespace Assignment3.ProblemDomain
 {
+
+    [Serializable]
     public class User : IEquatable<User>
     {
         public int Id { get; private set; }
